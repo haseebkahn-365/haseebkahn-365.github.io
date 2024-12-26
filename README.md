@@ -29,6 +29,10 @@ The `Town` class serves as the main container for the routing system.
 - `connectVertices(String fromName, String toName, double weight)`: Creates a road between two locations
 - `fromData(Map<String, List<(String, double)>> adjacencyList, Map<String, (double, double)> coordinates)`: Factory method to create a town from data
 
+- ## Class Diagram
+
+![Class Diagram](classes.jpg)
+
 ### Car
 The `Car` class represents a vehicle in the system with routing capabilities.
 
