@@ -162,4 +162,4 @@ void main() {
 
 ## Class Diagram
 
-![Class Diagram](tests.jpg)
+![Class Diagram](tests.png)
