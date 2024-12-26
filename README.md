@@ -159,3 +159,7 @@ void main() {
 - Proper equality implementations for vertices and edges
 - Safe handling of edge cases in pathfinding
 - Validation of car and road states
+
+## Class Diagram
+
+![Class Diagram](tests.jpg)
