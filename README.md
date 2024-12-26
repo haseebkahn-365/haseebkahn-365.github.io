@@ -100,22 +100,52 @@ The system uses Dijkstra's algorithm with the following optimizations:
 ## Usage Example
 
 ```dart
-// Create a new town
-var town = Town();
+void main() {
+  group('Car Path Finding Tests', () {
+    late Town town;
 
-// Add vertices (locations)
-town.addVertex(Vertex(name: "A", position: Vector2(0, 0)));
-town.addVertex(Vertex(name: "B", position: Vector2(100, 100)));
+    setUp(() {
+      // Create test town with consistent data
+      final adjacencyList = {
+        'A': [('B', 4.0), ('C', 8.0), ('E', 2.0)],
+        'B': [('A', 4.0), ('C', 3.0)],
+        'C': [('B', 3.0), ('D', 5.0), ('A', 6.0)],
+        'D': [('C', 5.0), ('E', 2.0)],
+        'E': [('D', 2.0), ('A', 2.0)]
+      };
 
-// Connect vertices with a road
-town.connectVertices("A", "B", 1.0);
+      final coordinates = {'A': (100.0, 100.0), 'B': (250.0, 100.0), 'C': (250.0, 250.0), 'D': (100.0, 250.0), 'E': (100.0, 175.0)};
 
-// Create and add a car
-var car = Car(
-  start: town.vertexMap["A"]!,
-  end: town.vertexMap["B"]!,
-);
-town.addCar(car);
+      town = Town.fromData(adjacencyList, coordinates);
+    });
+
+    test('Town is created with correct number of vertices and connections', () {
+      expect(town.vertices.length, equals(5));
+      expect(town.vertexMap['A']?.adjacencyList.length, equals(3));
+      expect(town.vertexMap['B']?.adjacencyList.length, equals(2));
+      expect(town.vertexMap['C']?.adjacencyList.length, equals(3));
+      expect(town.vertexMap['D']?.adjacencyList.length, equals(2));
+      expect(town.vertexMap['E']?.adjacencyList.length, equals(2));
+    });
+
+    test('Car finds shortest path between A and C', () {
+      final car = Car(
+        start: town.vertexMap['A']!,
+        end: town.vertexMap['C']!,
+      );
+      town.addCar(car);
+
+      // Should choose path A->B->C (total weight 7) instead of A->C directly (weight 8)
+      expect(car.path.length, equals(2));
+      expect(car.path.first.start.name, equals('A'));
+      expect(car.path.first.end.name, equals('B'));
+      expect(car.path.last.start.name, equals('B'));
+      expect(car.path.last.end.name, equals('C'));
+
+      print('Expecting car on the road A->B');
+      expect(town.vertexMap['A']!.adjacencyList.first.carsUsingThisEdge, contains(car));
+    });
+
 ```
 
 ## Performance Considerations
